@@ -1,2 +1,0 @@
-./hcnng ./dataset/siftsmall/siftsmall/siftsmall_base.fvecs 1000 20 hcnng.ivecs
-./search ./dataset/siftsmall/siftsmall/siftsmall_base.fvecs ./dataset/siftsmall/siftsmall/siftsmall_query.fvecs ./dataset/siftsmall/siftsmall/siftsmall_groundtruth.ivecs hcnng.ivecs 1 -1

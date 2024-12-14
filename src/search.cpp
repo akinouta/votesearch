@@ -6,7 +6,7 @@
     #define thread_local __thread
 #endif
 
-#include <search.h>
+#include "search.h"
 
 using namespace std;
 

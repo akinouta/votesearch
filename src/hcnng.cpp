@@ -6,7 +6,7 @@
     #define thread_local __thread
 #endif
 
-#include <hcnng.h>
+#include "hcnng.h"
 
 using namespace std;
 

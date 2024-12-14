@@ -10,16 +10,16 @@
 #include<vector>
 #include "common.h"
 
-struct guided_tree
+struct Guided_tree
 {
-    guided_tree *neg;
-    guided_tree *pos;
-    std::vector<int> points;
+    Guided_tree *neg;
+    Guided_tree *pos;
+    std::vector<int> neighbors;
     bool is_leaf;
     int level;
-    guided_tree();
-    ~guided_tree(); 
+    Guided_tree();
+    ~Guided_tree(); 
 };
 
-guided_tree get_guided_tree(int p,std::vector<int> neighbors,int start_dim,int end_dim);
+Guided_tree* get_Guided_tree(int p,Matrix<float> &points,std::vector<int> &neighbors,int start_dim,int end_dim);
 #endif
