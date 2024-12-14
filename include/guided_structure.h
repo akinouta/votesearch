@@ -21,5 +21,7 @@ struct Guided_tree
     ~Guided_tree(); 
 };
 
+
 Guided_tree* get_Guided_tree(int p,Matrix<float> &points,std::vector<int> &neighbors,int start_dim,int end_dim);
+std::vector<Guided_tree*> get_all_Guided_tree(Matrix<float> &points,AdjList &graph);
 #endif

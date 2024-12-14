@@ -1,10 +1,10 @@
 #ifndef HCNNG_H
 #define HCNNG_H
 
-#if defined (_MSC_VER)  // Visual studio
-    #define thread_local __declspec( thread )
-#elif defined (__GCC__) // GCC
-    #define thread_local __thread
+#if defined(_MSC_VER) // Visual studio
+#define thread_local __declspec(thread)
+#elif defined(__GCC__) // GCC
+#define thread_local __thread
 #endif
 
 #include <iostream>
@@ -33,6 +33,5 @@ Graph create_exact_mst(Matrix<float> &points, int *idx_points, int left, int rig
 bool check_in_neighbors(int u, std::vector<Edge> &neigh);
 void create_clusters(Matrix<float> &points, int *idx_points, int left, int right, Graph &graph, int minsize_cl, std::vector<omp_lock_t> &locks, int max_mst_degree);
 Graph HCNNG_create_graph(Matrix<float> &points, int Dim, int num_cl, int minsize_cl, int max_mst_degree);
-
 
 #endif

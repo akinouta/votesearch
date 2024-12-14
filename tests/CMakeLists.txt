@@ -24,7 +24,7 @@ foreach(TEST_SOURCE ${TEST_SOURCES})
     # 添加可执行文件
     add_executable(${TEST_NAME} ${TEST_SOURCE})
     
-    # 链接到mylib库
+    # 链接到mylib库FFF
     target_link_libraries(${TEST_NAME} mylib)
     
     # 如果需要开启OpenMP支持

@@ -1,6 +1,7 @@
 #include "search.h"
 using namespace std;
-int main(int argc, char** argv){
+int main(int argc, char **argv)
+{
 
 	// argv[1]: dataset file
 	// argv[2]: queries file
@@ -20,22 +21,23 @@ int main(int argc, char** argv){
 
 	Matrix<float> points = read_fvecs(file_dataset, N, Dim);
 	printf("base read (%d,%d) ...\n", N, Dim);
-	Matrix<float>  queries = read_fvecs(file_queries, num_queries, Dim);
+	Matrix<float> queries = read_fvecs(file_queries, num_queries, Dim);
 	printf("queries read (%d,%d)...\n", num_queries, Dim);
-	vector<vector<int> > gt = read_ivecs(file_gt, num_queries, nn_gt);
+	vector<vector<int>> gt = read_ivecs(file_gt, num_queries, nn_gt);
 	printf("groundtruth read...\n");
 
 	AdjList graph = read_adjlist(file_graph, points, true);
-	
-	if(max_calc>0)
+
+	if (max_calc > 0)
 		run_on_testset(queries, K, points, gt, graph, max_calc);
-	else{
-		float p=0;
-		for(p=4.0;p>=1.99; p-=0.10){
-			max_calc = (int) ((float)N / pow(10.0, p));
+	else
+	{
+		float p = 0;
+		for (p = 4.0; p >= 1.99; p -= 0.10)
+		{
+			max_calc = (int)((float)N / pow(10.0, p));
 			run_on_testset(queries, K, points, gt, graph, max_calc);
 		}
 	}
 	return 0;
 }
-
