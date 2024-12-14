@@ -30,5 +30,6 @@
 #include <chrono>
 
 std::tuple<std::vector<int>, std::vector<float>> search_KNN(float *query, int K, AdjList &graph, Matrix<float> &points, int start, int max_calc);
-void run_on_testset(Matrix<float> &queries, int K, Matrix<float> &points, std::vector<std::vector<int>> &GT, AdjList &graph, int max_calc);
+std::tuple<std::vector<int>, std::vector<float>> search_KNN_by_Guided_tree(float *query, int K, AdjList &graph, Matrix<float> &points,std::vector<Guided_tree *> &trees, int start, int max_calc);
+void test_without_guide(Matrix<float> &queries, int K, Matrix<float> &points, std::vector<std::vector<int>> &GT, AdjList &graph, int max_calc);
 #endif

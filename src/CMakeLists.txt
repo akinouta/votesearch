@@ -1,5 +1,5 @@
 # 指定CMake的最小版本要求
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.6)
 
 # 定义项目名称和语言
 project(HCNNG_LIB CXX)

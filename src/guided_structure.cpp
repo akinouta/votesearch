@@ -5,8 +5,9 @@
 #endif
 
 #include "guided_structure.h"
+using namespace std;
 
-Guided_tree::Guided_tree()
+Guided_tree::Guided_tree() : is_leaf(false)
 {
 }
 
@@ -14,11 +15,11 @@ Guided_tree::~Guided_tree()
 {
 }
 
-Guided_tree *get_Guided_tree(int p, Matrix<float> &points, std::vector<int> &neighbors, int start_dim, int end_dim)
+Guided_tree *get_Guided_tree(int p, Matrix<float> &points, vector<int> &neighbors, int start_dim, int end_dim)
 {
-    Guided_tree *tree=new Guided_tree();
-    std::vector<int> neg_neighbors;
-    std::vector<int> pos_neighbors;
+    Guided_tree *tree = new Guided_tree();
+    vector<int> neg_neighbors;
+    vector<int> pos_neighbors;
     for (auto neighbor : neighbors)
     {
         if (start_dim < end_dim && points[neighbor][start_dim] < points[p][start_dim])
@@ -34,6 +35,7 @@ Guided_tree *get_Guided_tree(int p, Matrix<float> &points, std::vector<int> &nei
     if (neg_neighbors.empty() || pos_neighbors.empty())
     {
         tree->neighbors = neighbors;
+        tree->is_leaf = true;
     }
     else
     {
@@ -42,13 +44,36 @@ Guided_tree *get_Guided_tree(int p, Matrix<float> &points, std::vector<int> &nei
     return tree;
 }
 
-std::vector<Guided_tree *> get_all_Guided_tree(Matrix<float> &points, AdjList &graph)
+vector<Guided_tree *> get_all_Guided_tree(Matrix<float> &points, AdjList &graph)
 {
-    std::vector<Guided_tree *> trees;
-    for (int i = 0; i < points.rows; i++)
+    vector<Guided_tree *> trees;
+    for (int i = 0; i < points.rows; ++i)
     {
         auto tree = get_Guided_tree(i, points, graph[i], 0, points.cols);
         trees.push_back(tree);
     }
-    tre
+    return trees;
+}
+
+vector<int> find_neighbors(float *query, int curr, Guided_tree *tree, Matrix<float> &points, int start_dim, int end_dim)
+{
+    for (int dim = start_dim; dim < end_dim; ++dim)
+    {
+        if (tree->is_leaf)
+        {
+            break;
+        }
+        else
+        {
+            if (query[dim] < points[curr][dim])
+            {
+                tree = tree->neg;
+            }
+            else
+            {
+                tree = tree->pos;
+            }
+        }
+    }
+    return tree->neighbors;
 }

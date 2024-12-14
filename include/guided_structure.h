@@ -24,4 +24,5 @@ struct Guided_tree
 
 Guided_tree* get_Guided_tree(int p,Matrix<float> &points,std::vector<int> &neighbors,int start_dim,int end_dim);
 std::vector<Guided_tree*> get_all_Guided_tree(Matrix<float> &points,AdjList &graph);
+std::vector<int> find_neighbors(float *query, int curr, Guided_tree *tree, Matrix<float> &points, int start_dim, int end_dim);
 #endif

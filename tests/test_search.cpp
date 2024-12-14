@@ -29,14 +29,14 @@ int main(int argc, char **argv)
 	AdjList graph = read_adjlist(file_graph, points, true);
 
 	if (max_calc > 0)
-		run_on_testset(queries, K, points, gt, graph, max_calc);
+		test_without_guide(queries, K, points, gt, graph, max_calc);
 	else
 	{
 		float p = 0;
 		for (p = 4.0; p >= 1.99; p -= 0.10)
 		{
 			max_calc = (int)((float)N / pow(10.0, p));
-			run_on_testset(queries, K, points, gt, graph, max_calc);
+			test_without_guide(queries, K, points, gt, graph, max_calc);
 		}
 	}
 	return 0;
