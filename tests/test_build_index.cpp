@@ -25,8 +25,7 @@ int main(int argc, char **argv)
 	Matrix<float> points = read_fvecs(file_dataset, N, Dim);
 	printf("base read (%d,%d) ...\n", N, Dim);
 	Graph nngraph = HCNNG_create_graph(points, Dim, num_cl, minsize_cl, max_mst_degree);
-	cout << nngraph.size();
-
+	
 	write_graph(file_graph, nngraph);
 	return 0;
 }

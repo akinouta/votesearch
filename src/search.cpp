@@ -5,7 +5,7 @@
 #endif
 
 #include "search.h"
-#include <guided_structure.h>
+#include "guided_structure.h"
 
 using namespace std;
 
@@ -129,7 +129,7 @@ void test_without_guide(Matrix<float> &queries, int K, Matrix<float> &points, ve
 	printf("Recall@%d(%d):\t%.2lf\n", K, max_calc, recall * 100 / num_queries);
 }
 
-void test_Guided_tree(Matrix<float> &queries, int K, Matrix<float> &points, vector<vector<int>> &GT, AdjList &graph, int max_calc)
+void test_Guided_tree(Matrix<float> &queries, int K, Matrix<float> &points, vector<vector<int>> &GT, AdjList &graph, vector<Guided_tree *> &trees, int max_calc)
 {
 	float recall = 0;
 	int N = points.rows;
@@ -139,7 +139,7 @@ void test_Guided_tree(Matrix<float> &queries, int K, Matrix<float> &points, vect
 	for (int i = 0; i < num_queries; i++)
 	{
 		int start = rand_int(0, N - 1);
-		auto knn = search_KNN(queries[i], K, graph, points, start, max_calc);
+		auto knn = search_KNN_by_Guided_tree(queries[i], K, graph, points, trees, start, max_calc);
 		#pragma omp critical
 		{
 			// vector<float> aux(K);
