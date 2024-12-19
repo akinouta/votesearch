@@ -40,6 +40,7 @@ Guided_tree *get_Guided_tree(int p, Matrix<float> &points, vector<int> &neighbor
     else
     {
         tree->neg = get_Guided_tree(p, points, neg_neighbors, start_dim + 1, end_dim);
+        tree->pos = get_Guided_tree(p, points, pos_neighbors, start_dim + 1, end_dim);
     }
     return tree;
 }

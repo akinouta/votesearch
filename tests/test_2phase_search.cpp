@@ -30,14 +30,14 @@ int main(int argc, char **argv)
     auto trees = get_all_Guided_tree(points, graph);
 
     if (max_calc > 0)
-        test_Guided_tree(queries, K, points, gt, graph, trees, max_calc);
+        test_two_phase(queries, K, points, gt, graph, trees, max_calc);
     else
     {
         float p = 0;
         for (p = 4.0; p >= 1.99; p -= 0.10)
         {
             max_calc = (int)((float)N / pow(10.0, p));
-            test_Guided_tree(queries, K, points, gt, graph, trees, max_calc);
+            test_two_phase(queries, K, points, gt, graph, trees, max_calc);
         }
     }
     return 0;
