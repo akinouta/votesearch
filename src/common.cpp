@@ -4,7 +4,6 @@
 #define thread_local __thread
 #endif
 
-#define START_FROM_ZERO
 
 #include <common.h>
 
@@ -16,11 +15,8 @@ int rand_int(const int &min, const int &max)
 	if (!generator)
 		generator = new mt19937(clock() + std::hash<std::thread::id>()(this_thread::get_id()));
 	uniform_int_distribution<int> distribution(min, max);
-	#ifdef START_FROM_ZERO
-	return 0;
-	#elif
 	return distribution(*generator);
-	#endif
+
 }
 
 int rand_int_nosafe(int min, int max)
@@ -40,7 +36,7 @@ float rand_float(const float &min, const float &max)
 float dist_L2(float *x, float *y, int n)
 {
 	float d = 0;
-	#pragma omp parallel for
+	// #pragma omp parallel for
 	for (int i = 0; i < n; i++)
 		d += (x[i] - y[i]) * (x[i] - y[i]);
 	return d;

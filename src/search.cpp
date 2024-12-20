@@ -147,17 +147,17 @@ tuple<vector<int>, vector<float>> search_KNN_two_phase(float *query, int K, AdjL
 		q.pop();
 		// get neighbors' neighbors
 
-		std::unordered_set<int> nns(graph[v].begin(), graph[v].end());
+		// std::unordered_set<int> nns(graph[v].begin(), graph[v].end());
 
-		for (auto n : graph[v])
-		{
-			for (auto nn : graph[n])
-			{
-				nns.insert(nn);
-			}
-		}
+		// for (auto n : graph[v])
+		// {
+		// 	for (auto nn : graph[n])
+		// 	{
+		// 		nns.insert(nn);
+		// 	}
+		// }
 
-		for (int u : nns)
+		for (int u : graph[v])
 		{
 			if (calc_left <= 0)
 				break;
