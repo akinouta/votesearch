@@ -253,6 +253,11 @@ void print_stats_graph(AdjList &G)
 	printf("std degree:\t%.2lf\n\n", std_v(sizeadj));
 }
 
+void print_recall(int K, int max_calc, int num_queries, float recall)
+{
+	printf("Recall@%d(%d),\t%.2lf\n", K, max_calc, recall * 100 / num_queries);
+}
+
 void write_graph(string path_file, Graph &G)
 {
 	FILE *F;

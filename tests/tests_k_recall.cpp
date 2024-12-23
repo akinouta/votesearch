@@ -18,6 +18,7 @@ int main(int argc, char **argv)
     string file_graph(argv[4]);
     int K = atoi(argv[5]);
     int max_calc = atoi(argv[6]);
+    int L = atoi(argv[7]);
 
     Matrix<float> points = read_fvecs(file_dataset, N, Dim);
     printf("base read (%d,%d) ...\n", N, Dim);
@@ -28,32 +29,50 @@ int main(int argc, char **argv)
 
     AdjList graph = read_adjlist(file_graph, points, true);
     auto trees = get_all_Guided_tree(points, graph);
+    auto forest = get_all_Guided_forest(points, graph);
+
     int start = rand_int(0, N);
     // void (*func[])(Matrix<float>&, int, Matrix<float>&, vector<vector<int>>&, AdjList&, vector<Guided_tree *>&, int, int) = {test_without_guide,test_Guided_tree,test_two_phase};
     if (max_calc > 0)
     {
         test_without_guide(queries, K, points, gt, graph, max_calc, start);
         test_Guided_tree(queries, K, points, gt, graph, trees, max_calc, start);
-        test_two_phase(queries, K, points, gt, graph, trees, max_calc, start);
+        test_two_phase(queries, K, points, gt, graph, trees, max_calc, start, L);
+        test_two_phase_nn(queries, K, points, gt, graph, trees, max_calc, start, L);
     }
 
     else
     {
         float p = 0;
+        cout << "Ordinary Search" << endl;
         for (p = 4.0; p >= 1.99; p -= 0.10)
         {
             max_calc = (int)((float)N / pow(10.0, p));
             test_without_guide(queries, K, points, gt, graph, max_calc, start);
         }
+        cout << "Guided Search" << endl;
         for (p = 4.0; p >= 1.99; p -= 0.10)
         {
             max_calc = (int)((float)N / pow(10.0, p));
             test_Guided_tree(queries, K, points, gt, graph, trees, max_calc, start);
         }
+        cout << "Two Phase Search" << endl;
         for (p = 4.0; p >= 1.99; p -= 0.10)
         {
             max_calc = (int)((float)N / pow(10.0, p));
-            test_two_phase(queries, K, points, gt, graph, trees, max_calc, start);
+            test_two_phase(queries, K, points, gt, graph, trees, max_calc, start, L);
+        }
+        cout << "Two Phase Search, Second Phase Search Neighbors' Neighbors" << endl;
+        for (p = 4.0; p >= 1.99; p -= 0.10)
+        {
+            max_calc = (int)((float)N / pow(10.0, p));
+            test_two_phase_nn(queries, K, points, gt, graph, trees, max_calc, start, L);
+        }
+        cout << "Vote Search" << endl;
+        for (p = 4.0; p >= 1.99; p -= 0.10)
+        {
+            max_calc = (int)((float)N / pow(10.0, p));
+            test_vote(queries, K, points, gt, graph, forest, max_calc, start, L);
         }
     }
     return 0;

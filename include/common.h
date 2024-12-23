@@ -164,6 +164,7 @@ std::vector<int> get_sizeadj(Graph &G);
 std::vector<int> get_sizeadj(AdjList &G);
 void print_stats_graph(Graph &G);
 void print_stats_graph(AdjList &G);
+void print_recall(int K, int max_calc, int num_queries, float recall);
 void write_graph(std::string path_file, Graph &G);
 Graph read_graph(std::string path_file, Matrix<float> &points, bool verbose);
 AdjList read_adjlist(std::string path_file, Matrix<float> &points, bool verbose);

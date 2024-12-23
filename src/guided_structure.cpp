@@ -45,17 +45,6 @@ Guided_tree *get_Guided_tree(int p, Matrix<float> &points, vector<int> &neighbor
     return tree;
 }
 
-vector<Guided_tree *> get_all_Guided_tree(Matrix<float> &points, AdjList &graph)
-{
-    vector<Guided_tree *> trees;
-    for (int i = 0; i < points.rows; ++i)
-    {
-        auto tree = get_Guided_tree(i, points, graph[i], 0, points.cols);
-        trees.push_back(tree);
-    }
-    return trees;
-}
-
 vector<int> find_neighbors(float *query, int curr, Guided_tree *tree, Matrix<float> &points, int start_dim, int end_dim)
 {
     for (int dim = start_dim; dim < end_dim; ++dim)
@@ -77,4 +66,32 @@ vector<int> find_neighbors(float *query, int curr, Guided_tree *tree, Matrix<flo
         }
     }
     return tree->neighbors;
+}
+
+vector<Guided_tree *> get_all_Guided_tree(Matrix<float> &points, AdjList &graph)
+{
+    vector<Guided_tree *> trees;
+    for (int i = 0; i < points.rows; ++i)
+    {
+        auto tree = get_Guided_tree(i, points, graph[i], 0, points.cols);
+        trees.push_back(tree);
+    }
+    return trees;
+}
+
+vector<vector<Guided_tree *>> get_all_Guided_forest(Matrix<float> &points, AdjList &graph)
+{
+    vector<vector<Guided_tree *>> forest;
+    for (int i = 0; i < points.rows; ++i)
+    {
+        int dim = 0;
+        vector<Guided_tree *> trees;
+        while (dim < points.cols)
+        {
+            auto tree = get_Guided_tree(i, points, graph[i], 0, points.cols);
+            trees.push_back(tree);
+        }
+        forest.push_back(trees);
+    }
+    return forest;
 }

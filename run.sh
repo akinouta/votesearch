@@ -11,16 +11,14 @@ cmake --build build
 mkdir -p bin/graph
 
 # 设置数据集和数据路径变量
-dataset=sift
+dataset=gist
 data_path=dataset/${dataset}
+graph_path=./bin/graph/${dataset}_hcnng.ivecs
 
 # 检查文件是否存在，如果不存在则执行 build_index 命令
-if [ ! -f ./bin/graph/hcnng.ivecs ]; then
-    ./bin/test_build_index ${data_path}/${dataset}_base.fvecs 1000 20 ./bin/graph/hcnng.ivecs
+if [ ! -f ${graph_path} ]; then
+    ./bin/test_build_index ${data_path}/${dataset}_base.fvecs 1000 20 ${graph_path}
 fi
 
-# 执行普通搜索测试（注释掉了，因为没有提供具体的文件路径）
-./bin/test_ordinary_search ${data_path}/${dataset}_base.fvecs ${data_path}/${dataset}_query.fvecs ${data_path}/${dataset}_groundtruth.ivecs ./bin/graph/hcnng.ivecs 1 -1
-
 # 执行两阶段搜索测试
-./bin/test_2phase_search ${data_path}/${dataset}_base.fvecs ${data_path}/${dataset}_query.fvecs ${data_path}/${dataset}_groundtruth.ivecs ./bin/graph/hcnng.ivecs 1 -1
+./bin/test_l_2phase_search ${data_path}/${dataset}_base.fvecs ${data_path}/${dataset}_query.fvecs ${data_path}/${dataset}_groundtruth.ivecs ${graph_path} 100 -1 30
