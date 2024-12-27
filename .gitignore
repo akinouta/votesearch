@@ -1,5 +1,8 @@
 /bin/
+!/bin/graph/
 /build/
 /dataset/
+!/dataset/siftsmall
+/.vscode/
 
 

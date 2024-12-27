@@ -72,10 +72,10 @@ tuple<vector<int>, vector<float>> search_KNN_by_Guided_tree(float *query, int K,
 	{
 		float d;
 		int v;
-		int dim(0);
+		int max_dim(0);
 		tie(d, v) = q.top();
 		q.pop();
-		vector<int> neighbors = find_neighbors(query, v, trees[v], points, dim, points.cols);
+		vector<int> neighbors = find_neighbors(query, v, trees[v], points, 0, points.cols, max_dim);
 		for (int u : neighbors)
 		{
 			if (calc_left <= 0)
@@ -122,11 +122,11 @@ tuple<vector<int>, vector<float>> search_KNN_two_phase(float *query, int K, AdjL
 	{
 		float d;
 		int v;
-		int dim(0);
+		int max_dim(0);
 
 		tie(d, v) = q.top();
 		q.pop();
-		vector<int> neighbors = find_neighbors(query, v, trees[v], points, dim, points.cols);
+		vector<int> neighbors = find_neighbors(query, v, trees[v], points, 0, points.cols, max_dim);
 		for (int u : neighbors)
 		{
 			if (calc_left <= 0)
@@ -207,10 +207,10 @@ tuple<vector<int>, vector<float>> search_KNN_two_phase_nn(float *query, int K, A
 	{
 		float d;
 		int v;
-		int dim(0);
+		int max_dim(0);
 		tie(d, v) = q.top();
 		q.pop();
-		vector<int> neighbors = find_neighbors(query, v, trees[v], points, dim, points.cols);
+		vector<int> neighbors = find_neighbors(query, v, trees[v], points, 0, points.cols, max_dim);
 		for (int u : neighbors)
 		{
 			if (calc_left <= 0)
@@ -294,10 +294,10 @@ tuple<vector<int>, vector<float>> search_KNN_vote(float *query, int K, AdjList &
 	{
 		auto trees = forest[new_start];
 		unordered_map<int, int> counters;
-		int dim(0);
+		int max_dim(0);
 		for (auto tree : trees)
 		{
-			vector<int> neighbors = find_neighbors(query, new_start, tree, points, dim, points.cols);
+			vector<int> neighbors = find_neighbors(query, new_start, tree, points, 0, points.cols, max_dim);
 			for (auto neighbor : neighbors)
 			{
 				counters[neighbor] += 1;

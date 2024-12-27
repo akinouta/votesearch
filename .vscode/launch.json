@@ -1,16 +1,17 @@
 {
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/test_2phase_search",
+            "program": "${workspaceFolder}/bin/test_l_2phase_search",
             "args": [
-                "dataset/sift/sift_base.fvecs",
-                "dataset/sift/sift_query.fvecs",
-                "dataset/sift/sift_groundtruth.ivecs",
-                "bin/graph/hcnng.ivecs",
+                "dataset/gist/gist_base.fvecs",
+                "dataset/gist/gist_query.fvecs",
+                "dataset/gist/gist_groundtruth.ivecs",
+                "bin/graph/gist_hcnng.ivecs",
                 "1",
                 "-1"
             ],
@@ -19,7 +20,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "D:/Programming/Mingw-w64/x86_64-14.2.0-release-win32-seh-ucrt-rt_v12-rev0/mingw64/bin/gdb.exe",
+            "miDebuggerPath": "/usr/bin/gdb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",

@@ -6,8 +6,8 @@
             "type": "shell",
             "command": "cmake",
             "args": [
-                "-G",
-                "MinGW Makefiles",
+                // "-G",
+                // "MinGW Makefiles",
                 "-Bbuild",
                 "-H .",
                 "-DCMAKE_BUILD_TYPE=Debug"

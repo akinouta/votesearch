@@ -15,11 +15,18 @@ Guided_tree::~Guided_tree()
 {
 }
 
-Guided_tree *get_Guided_tree(int p, Matrix<float> &points, vector<int> &neighbors, int &start_dim, int end_dim)
+Guided_tree *get_Guided_tree(int p, Matrix<float> &points, vector<int> &neighbors, int start_dim, int end_dim, int &max_dim)
 {
+
     Guided_tree *tree = new Guided_tree();
     vector<int> neg_neighbors;
     vector<int> pos_neighbors;
+    // if (start_dim >= end_dim)
+    // {
+    //     tree->neighbors = neighbors;
+    //     tree->is_leaf = true;
+    //     return tree;
+    // }
     for (auto neighbor : neighbors)
     {
         if (start_dim < end_dim && points[neighbor][start_dim] < points[p][start_dim])
@@ -31,6 +38,7 @@ Guided_tree *get_Guided_tree(int p, Matrix<float> &points, vector<int> &neighbor
             pos_neighbors.push_back(neighbor);
         }
     }
+    ++start_dim;
 
     if (neg_neighbors.empty() || pos_neighbors.empty())
     {
@@ -39,16 +47,17 @@ Guided_tree *get_Guided_tree(int p, Matrix<float> &points, vector<int> &neighbor
     }
     else
     {
-        ++start_dim;
-        tree->neg = get_Guided_tree(p, points, neg_neighbors, start_dim, end_dim);
-        tree->pos = get_Guided_tree(p, points, pos_neighbors, start_dim, end_dim);
+        tree->neg = get_Guided_tree(p, points, neg_neighbors, start_dim, end_dim, max_dim);
+        tree->pos = get_Guided_tree(p, points, pos_neighbors, start_dim, end_dim, max_dim);
     }
+    max_dim = max(start_dim, max_dim);
     return tree;
 }
 
-vector<int> find_neighbors(float *query, int curr, Guided_tree *tree, Matrix<float> &points, int &start_dim, int end_dim)
+vector<int> find_neighbors(float *query, int curr, Guided_tree *tree, Matrix<float> &points, int start_dim, int end_dim, int &max_dim)
 {
-    for (int dim = start_dim; dim < end_dim; ++dim)
+    int dim;
+    for (dim = start_dim; dim < end_dim; ++dim)
     {
         if (tree->is_leaf)
         {
@@ -66,36 +75,41 @@ vector<int> find_neighbors(float *query, int curr, Guided_tree *tree, Matrix<flo
             }
         }
     }
+    max_dim = dim;
     return tree->neighbors;
 }
 
 vector<Guided_tree *> get_all_Guided_tree(Matrix<float> &points, AdjList &graph)
 {
     vector<Guided_tree *> trees;
-#pragma omp parallel for
+// #pragma omp parallel for
     for (int i = 0; i < points.rows; ++i)
     {
-        int dim(0);
-        auto tree = get_Guided_tree(i, points, graph[i], dim, points.cols);
+        int max_dim(0);
+        auto tree = get_Guided_tree(i, points, graph[i], 0, points.cols, max_dim);
         trees.push_back(tree);
     }
+    cout << "get all Guided tree" << endl;
     return trees;
 }
 
 vector<vector<Guided_tree *>> get_all_Guided_forest(Matrix<float> &points, AdjList &graph)
 {
     vector<vector<Guided_tree *>> forest;
-#pragma omp parallel for
+// #pragma omp parallel for
     for (int i = 0; i < points.rows; ++i)
     {
-        int dim(0);
+        int start_dim(0);
+        int max_dim(0);
         vector<Guided_tree *> trees;
-        while (dim < points.cols)
+        while (start_dim < points.cols)
         {
-            auto tree = get_Guided_tree(i, points, graph[i], dim, points.cols);
+            auto tree = get_Guided_tree(i, points, graph[i], start_dim, points.cols, max_dim);
             trees.push_back(tree);
+            start_dim = max_dim;
         }
         forest.push_back(trees);
     }
+    cout << "get forest" << endl;
     return forest;
 }

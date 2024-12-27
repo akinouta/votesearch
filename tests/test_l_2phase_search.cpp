@@ -41,8 +41,8 @@ int main(int argc, char **argv)
             test_two_phase(queries, K, points, gt, graph, trees, max_calc, start, L);
             cout << "2phase2(" << L << "):";
             test_two_phase_nn(queries, K, points, gt, graph, trees, max_calc, start, L);
-            cout << "vote(" << L << "):";
-            test_vote(queries, K, points, gt, graph, forest, max_calc, start, L);
+            // cout << "vote(" << L << "):";
+            // test_vote(queries, K, points, gt, graph, forest, max_calc, start, L);
         }
     }
     return 0;
