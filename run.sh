@@ -11,7 +11,7 @@ cmake --build build
 mkdir -p bin/graph
 
 # 设置数据集和数据路径变量
-dataset=gist
+dataset=sift
 data_path=dataset/${dataset}
 graph_path=./bin/graph/${dataset}_hcnng.ivecs
 
