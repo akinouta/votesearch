@@ -31,19 +31,20 @@ int main(int argc, char **argv)
     auto forest = get_all_Guided_forest(points, graph);
     int start = rand_int(0, N);
     float p = 0;
+    int L=200;
 
     for (p = 4.0; p >= 1.99; p -= 0.10)
     {
-        for (int L = 10; L <= 100; L += 10)
-        {
+        // for (int L = 10; L <= 100; L += 10)
+        // {
             max_calc = (int)((float)N / pow(10.0, p));
             cout << "2phase1(" << L << "):";
             test_two_phase(queries, K, points, gt, graph, trees, max_calc, start, L);
             cout << "2phase2(" << L << "):";
             test_two_phase_nn(queries, K, points, gt, graph, trees, max_calc, start, L);
-            // cout << "vote(" << L << "):";
-            // test_vote(queries, K, points, gt, graph, forest, max_calc, start, L);
-        }
+            cout << "vote(" << L << "):";
+            test_vote(queries, K, points, gt, graph, forest, max_calc, start, L);
+        // }
     }
     return 0;
 }
