@@ -30,25 +30,18 @@ int main(int argc, char **argv)
     auto trees = get_all_Guided_tree(points, graph);
     auto forest = get_all_Guided_forest(points, graph);
     int start = rand_int(0, N);
-    float p = 0;
-    int L = 200;
-
-    for (p = 4.0; p >= 1.99; p -= 0.10)
-    {
-        // for (int L = 10; L <= 100; L += 10)
-        // {
-        max_calc = (int)((float)N / pow(10.0, p));
-        cout << "greedy(" << L << "):";
+    int beta=10;
+    // for(int beta=1;beta<=1001;beta+=100){
+        cout << "greedy(" << beta << "):";
         test_without_guide(queries, K, points, gt, graph, max_calc, start);
-        cout << "guided(" << L << "):";
+        cout << "guided(" << beta << "):";
         test_Guided_tree(queries, K, points, gt, graph, trees, max_calc, start);
-        cout << "2phase1(" << L << "):";
-        test_two_phase(queries, K, points, gt, graph, trees, max_calc, start, L);
-        cout << "2phase2(" << L << "):";
-        test_two_phase_nn(queries, K, points, gt, graph, trees, max_calc, start, L);
-        cout << "vote(" << L << "):";
-        test_vote(queries, K, points, gt, graph, forest, max_calc, start, L);
-        // }
-    }
+        cout << "2phase1(" << beta << "):";
+        test_two_phase(queries, K, points, gt, graph, trees, max_calc, start, beta);
+        cout << "2phase2(" << beta << "):";
+        test_two_phase_nn(queries, K, points, gt, graph, trees, max_calc, start, beta);
+        cout << "vote(" << beta << "):";
+        test_vote(queries, K, points, gt, graph, forest, max_calc, start, beta);
+    // }
     return 0;
 }
