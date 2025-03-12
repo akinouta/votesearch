@@ -26,4 +26,6 @@ std::vector<int> find_neighbors(float *query, int curr, Guided_tree *tree, Matri
 std::vector<Guided_tree *> get_all_Guided_tree(Matrix<float> &points, AdjList &graph);
 std::vector<std::vector<Guided_tree *>> get_all_Guided_forest(Matrix<float> &points, AdjList &graph);
 
+void print_tree_levels(Guided_tree *root, std::string pre = "");
+
 #endif

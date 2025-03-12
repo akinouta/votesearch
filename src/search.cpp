@@ -149,17 +149,6 @@ tuple<vector<int>, vector<float>> search_KNN_two_phase(float *query, int K, AdjL
 		int v;
 		tie(d, v) = q.top();
 		q.pop();
-		// get neighbors' neighbors
-
-		// unordered_set<int> nns(graph[v].begin(), graph[v].end());
-
-		// for (auto n : graph[v])
-		// {
-		// 	for (auto nn : graph[n])
-		// 	{
-		// 		nns.insert(nn);
-		// 	}
-		// }
 
 		for (int u : graph[v])
 		{
@@ -285,9 +274,7 @@ tuple<vector<int>, vector<float>> search_KNN_vote(float *query, int K, AdjList &
 	unordered_set<int> visited;
 	visited.insert(start);
 	priority_queue<tuple<float, int>> q, knn;
-	float furthest_dist = dist_L2(points[start], query, points.cols);
-	q.push(make_tuple(-furthest_dist, start));
-	knn.push(make_tuple(furthest_dist, start));
+
 
 	// find new start
 	for (int i = 0; i < L; ++i)
@@ -315,6 +302,11 @@ tuple<vector<int>, vector<float>> search_KNN_vote(float *query, int K, AdjList &
 		new_start = max_n;
 	}
 	start = new_start;
+
+	float furthest_dist = dist_L2(points[start], query, points.cols);
+	q.push(make_tuple(-furthest_dist, start));
+	knn.push(make_tuple(furthest_dist, start));
+	
 	while (!q.empty() && calc_left > 0)
 	{
 		float d;
@@ -352,6 +344,94 @@ tuple<vector<int>, vector<float>> search_KNN_vote(float *query, int K, AdjList &
 	reverse(dists.begin(), dists.end());
 	return make_tuple(nearests, dists);
 }
+
+// no calc
+tuple<vector<int>, vector<float>> search_KNN_vote(float *query, int K, AdjList &graph, Matrix<float> &points, vector<vector<Guided_tree *>> &forest, int start, int L)
+{
+	int new_start = start;
+	int N = points.rows;
+	unordered_set<int> visited;
+	visited.insert(start);
+	priority_queue<tuple<float, int>> q, knn;
+
+
+	// find new start
+	for (int i = 0; i < L; ++i)
+	{
+		auto trees = forest[new_start];
+		unordered_map<int, int> counters;
+		int max_dim(0);
+		for (auto tree : trees)
+		{
+			vector<int> neighbors = find_neighbors(query, new_start, tree, points, 0, points.cols, max_dim);
+			for (auto neighbor : neighbors)
+			{
+				counters[neighbor] += 1;
+			}
+		}
+
+		int max_n = numeric_limits<int>::min();
+		for (const auto &pair : counters)
+		{
+			if (pair.second > max_n)
+			{
+				max_n = pair.second;
+			}
+		}
+		new_start = max_n;
+	}
+	start = new_start;
+
+	float furthest_dist = dist_L2(points[start], query, points.cols);
+	q.push(make_tuple(-furthest_dist, start));
+	knn.push(make_tuple(furthest_dist, start));
+
+	while (!q.empty())
+	{
+		float d;
+		int v;
+		tie(d, v) = q.top();
+		q.pop();
+		for (int u : graph[v])
+		{
+			if (in_set(u, visited))
+				continue;
+			visited.insert(u);
+			d = dist_L2(points[u], query, points.cols);
+			q.push(make_tuple(-d, u));
+			knn.push(make_tuple(d, u));
+			if (knn.size() > K)
+				knn.pop();
+		}
+
+		float b;
+		int vb;
+		tie(b,vb) = knn.top();
+	
+		if (knn.size() >= K && b>d)
+		{
+			break;
+		}
+	}
+
+
+
+	vector<int> nearests;
+	vector<float> dists;
+	while (!knn.empty())
+	{
+		float x;
+		int y;
+		tie(x, y) = knn.top();
+		nearests.push_back(y);
+		dists.push_back(x);
+		knn.pop();
+	}
+	reverse(nearests.begin(), nearests.end());
+	reverse(dists.begin(), dists.end());
+	return make_tuple(nearests, dists);
+}
+
 
 void test_without_guide(Matrix<float> &queries, int K, Matrix<float> &points, vector<vector<int>> &GT, AdjList &graph, int max_calc, int start)
 {

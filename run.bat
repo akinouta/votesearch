@@ -10,4 +10,5 @@ set data_path=dataset\sift
 @REM )
 
 @REM .\bin\test_ordinary_search %data_path%\%dataset%_base.fvecs %data_path%\%dataset%_query.fvecs %data_path%\%dataset%_groundtruth.ivecs .\bin\graph\hcnng.ivecs 1 -1
-.\bin\test_2phase_search %data_path%\%dataset%_base.fvecs %data_path%\%dataset%_query.fvecs %data_path%\%dataset%_groundtruth.ivecs .\bin\graph\hcnng.ivecs 1 -1
+@REM .\bin\test_2phase_search %data_path%\%dataset%_base.fvecs %data_path%\%dataset%_query.fvecs %data_path%\%dataset%_groundtruth.ivecs .\bin\graph\hcnng.ivecs 1 -1
+.\bin\test_degree %data_path%\%dataset%_base.fvecs %data_path%\%dataset%_query.fvecs %data_path%\%dataset%_groundtruth.ivecs .\bin\graph\hcnng.ivecs 1 -1

@@ -7,7 +7,7 @@
 #include "guided_structure.h"
 using namespace std;
 
-Guided_tree::Guided_tree() : is_leaf(false)
+Guided_tree::Guided_tree() : neg(nullptr), pos(nullptr), is_leaf(false)
 {
 }
 
@@ -21,12 +21,7 @@ Guided_tree *get_Guided_tree(int p, Matrix<float> &points, vector<int> &neighbor
     Guided_tree *tree = new Guided_tree();
     vector<int> neg_neighbors;
     vector<int> pos_neighbors;
-    // if (start_dim >= end_dim)
-    // {
-    //     tree->neighbors = neighbors;
-    //     tree->is_leaf = true;
-    //     return tree;
-    // }
+
     for (auto neighbor : neighbors)
     {
         if (start_dim < end_dim && points[neighbor][start_dim] < points[p][start_dim])
@@ -81,13 +76,12 @@ vector<int> find_neighbors(float *query, int curr, Guided_tree *tree, Matrix<flo
 
 vector<Guided_tree *> get_all_Guided_tree(Matrix<float> &points, AdjList &graph)
 {
-    vector<Guided_tree *> trees;
-// #pragma omp parallel for
+    vector<Guided_tree *> trees(points.rows);
+    // #pragma omp parallel for
     for (int i = 0; i < points.rows; ++i)
     {
         int max_dim(0);
-        auto tree = get_Guided_tree(i, points, graph[i], 0, points.cols, max_dim);
-        trees.push_back(tree);
+        trees[i] = get_Guided_tree(i, points, graph[i], 0, points.cols, max_dim);
     }
     cout << "get all Guided tree" << endl;
     return trees;
@@ -95,8 +89,7 @@ vector<Guided_tree *> get_all_Guided_tree(Matrix<float> &points, AdjList &graph)
 
 vector<vector<Guided_tree *>> get_all_Guided_forest(Matrix<float> &points, AdjList &graph)
 {
-    vector<vector<Guided_tree *>> forest;
-// #pragma omp parallel for
+    vector<vector<Guided_tree *>> forest(points.rows);
     for (int i = 0; i < points.rows; ++i)
     {
         int start_dim(0);
@@ -108,8 +101,38 @@ vector<vector<Guided_tree *>> get_all_Guided_forest(Matrix<float> &points, AdjLi
             trees.push_back(tree);
             start_dim = max_dim;
         }
-        forest.push_back(trees);
+        forest[i] = trees;
     }
     cout << "get forest" << endl;
     return forest;
+}
+
+
+
+void print_tree_levels(Guided_tree *root, string pre)
+{
+    if (root == nullptr)
+    {
+        cout << "Empty tree" << endl;
+        return;
+    }
+    if (root->pos != nullptr)
+    {
+        cout << pre << "pos:" << endl;
+        print_tree_levels(root->pos, pre + "\t");
+    }
+    if (root->neg != nullptr)
+    {
+        cout << pre << "neg:" << endl;
+        print_tree_levels(root->neg, pre + "\t");
+    }
+    if (root->is_leaf)
+    {
+        cout << pre << "[";
+        for (auto e : root->neighbors)
+        {
+            cout << e << " ";
+        }
+        cout << "]" << endl;
+    }
 }

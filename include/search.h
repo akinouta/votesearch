@@ -36,6 +36,8 @@ std::tuple<std::vector<int>, std::vector<float>> search_KNN_by_Guided_tree(float
 std::tuple<std::vector<int>, std::vector<float>> search_KNN_two_phase(float *query, int K, AdjList &graph, Matrix<float> &points, std::vector<Guided_tree *> &trees, int start, int max_calc, int L);
 std::tuple<std::vector<int>, std::vector<float>> search_KNN_two_phase_nn(float *query, int K, AdjList &graph, Matrix<float> &points, std::vector<Guided_tree *> &trees, int start, int max_calc, int L);
 std::tuple<std::vector<int>, std::vector<float>> search_KNN_vote(float *query, int K, AdjList &graph, Matrix<float> &points, std::vector<std::vector<Guided_tree*>> &forest, int start, int max_calc, int L);
+std::tuple<std::vector<int>, std::vector<float>> search_KNN_vote(float *query, int K, AdjList &graph, Matrix<float> &points, std::vector<std::vector<Guided_tree*>> &forest, int start, int L);
+
 void test_without_guide(Matrix<float> &queries, int K, Matrix<float> &points, std::vector<std::vector<int>> &GT, AdjList &graph, int max_calc, int start = -1);
 void test_Guided_tree(Matrix<float> &queries, int K, Matrix<float> &points, std::vector<std::vector<int>> &GT, AdjList &graph, std::vector<Guided_tree *> &trees, int max_calc, int start);
 void test_two_phase(Matrix<float> &queries, int K, Matrix<float> &points, std::vector<std::vector<int>> &GT, AdjList &graph, std::vector<Guided_tree *> &trees, int max_calc, int start, int L);
