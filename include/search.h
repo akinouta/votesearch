@@ -31,8 +31,9 @@
 #include "common.h"
 #include "guided_structure.h"
 
-std::tuple<std::vector<int>, std::vector<float>> search_KNN(float *query, int K, AdjList &graph, Matrix<float> &points, int start, int max_calc,std::priority_queue<std::tuple<float, int>> *new_q=nullptr);
-std::tuple<std::vector<int>, std::vector<float>> search_KNN_by_Guided_tree(float *query, int K, AdjList &graph, Matrix<float> &points, std::vector<Guided_tree *> &trees, int start, int max_calc, std::priority_queue<std::tuple<float, int>> *new_q=nullptr,int beta = -1);
+std::tuple<std::vector<int>, std::vector<float>> search_KNN(float *query, int K, AdjList &graph, Matrix<float> &points, int start, int &max_calc,std::priority_queue<std::tuple<float, int>> *new_q=nullptr);
+std::tuple<std::vector<int>, std::vector<float>> search_KNN_nn(float *query, int K, AdjList &graph, Matrix<float> &points, int start, int &max_calc,std::priority_queue<std::tuple<float, int>> *new_q=nullptr);
+std::tuple<std::vector<int>, std::vector<float>> search_KNN_by_Guided_tree(float *query, int K, AdjList &graph, Matrix<float> &points, std::vector<Guided_tree *> &trees, int start, int &max_calc, std::priority_queue<std::tuple<float, int>> *new_q=nullptr,int beta = -1);
 std::tuple<std::vector<int>, std::vector<float>> search_KNN_two_phase(float *query, int K, AdjList &graph, Matrix<float> &points, std::vector<Guided_tree *> &trees, int start, int max_calc, int beta);
 std::tuple<std::vector<int>, std::vector<float>> search_KNN_two_phase_nn(float *query, int K, AdjList &graph, Matrix<float> &points, std::vector<Guided_tree *> &trees, int start, int max_calc, int beta);
 std::tuple<std::vector<int>, std::vector<float>> search_KNN_vote(float *query, int K, AdjList &graph, Matrix<float> &points, std::vector<std::vector<Guided_tree*>> &forest, int start, int max_calc, int beta);

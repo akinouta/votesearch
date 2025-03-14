@@ -10,10 +10,10 @@
 
 using namespace std;
 
-tuple<vector<int>, vector<float>> search_KNN(float *query, int K, AdjList &graph, Matrix<float> &points, int start, int max_calc, priority_queue<tuple<float, int>> *new_q)
+tuple<vector<int>, vector<float>> search_KNN(float *query, int K, AdjList &graph, Matrix<float> &points, int start, int &max_calc, priority_queue<tuple<float, int>> *new_q)
 {
 	int N = points.rows;
-	int calc_left = max_calc - 1;
+	int calc_left = max_calc;
 	unordered_set<int> visited;
 	visited.insert(start);
 	priority_queue<tuple<float, int>> q, knn;
@@ -26,7 +26,7 @@ tuple<vector<int>, vector<float>> search_KNN(float *query, int K, AdjList &graph
 	q.push(make_tuple(-furthest_dist, start));
 	knn.push(make_tuple(furthest_dist, start));
 	
-	while (!q.empty())
+	while (!q.empty() && (calc_left>0))
 	{
 		float d;
 		int curr;
@@ -44,10 +44,14 @@ tuple<vector<int>, vector<float>> search_KNN(float *query, int K, AdjList &graph
 
 		for (int u : graph[curr])
 		{
+			if(calc_left<=0){
+				break;
+			}
 			if (in_set(u, visited))
 				continue;
 			visited.insert(u);
 			d = dist_L2(points[u], query, points.cols);
+			calc_left--;
 			q.push(make_tuple(-d, u));
 			knn.push(make_tuple(d, u));
 			if (knn.size() > K)
@@ -73,10 +77,10 @@ tuple<vector<int>, vector<float>> search_KNN(float *query, int K, AdjList &graph
 	return make_tuple(nearests, dists);
 }
 
-tuple<vector<int>, vector<float>> search_KNN_nn(float *query, int K, AdjList &graph, Matrix<float> &points, int start, int max_calc, priority_queue<tuple<float, int>> *new_q)
+tuple<vector<int>, vector<float>> search_KNN_nn(float *query, int K, AdjList &graph, Matrix<float> &points, int start, int &max_calc, priority_queue<tuple<float, int>> *new_q)
 {
 	int N = points.rows;
-	int calc_left = max_calc - 1;
+	int calc_left = max_calc;
 	unordered_set<int> visited;
 	visited.insert(start);
 	priority_queue<tuple<float, int>> q, knn;
@@ -89,7 +93,7 @@ tuple<vector<int>, vector<float>> search_KNN_nn(float *query, int K, AdjList &gr
 	q.push(make_tuple(-furthest_dist, start));
 	knn.push(make_tuple(furthest_dist, start));
 	
-	while (!q.empty())
+	while (!q.empty() && (calc_left>0))
 	{
 		float d;
 		int v;
@@ -118,10 +122,14 @@ tuple<vector<int>, vector<float>> search_KNN_nn(float *query, int K, AdjList &gr
 
 		for (int u : nns)
 		{
+			if(calc_left<=0){
+				break;
+			}
 			if (in_set(u, visited))
 				continue;
 			visited.insert(u);
 			d = dist_L2(points[u], query, points.cols);
+			calc_left--;
 			q.push(make_tuple(-d, u));
 			knn.push(make_tuple(d, u));
 			if (knn.size() > K)
@@ -147,10 +155,10 @@ tuple<vector<int>, vector<float>> search_KNN_nn(float *query, int K, AdjList &gr
 	return make_tuple(nearests, dists);
 }
 
-tuple<vector<int>, vector<float>> search_KNN_by_Guided_tree(float *query, int K, AdjList &graph, Matrix<float> &points, vector<Guided_tree *> &trees, int start, int max_calc,priority_queue<tuple<float, int>> *new_q,int beta)
+tuple<vector<int>, vector<float>> search_KNN_by_Guided_tree(float *query, int K, AdjList &graph, Matrix<float> &points, vector<Guided_tree *> &trees, int start, int &max_calc,priority_queue<tuple<float, int>> *new_q,int beta)
 {
 	int N = points.rows;
-	int calc_left = max_calc - 1;
+	int calc_left = max_calc;
 	unordered_set<int> visited;
 	visited.insert(start);
 	priority_queue<tuple<float, int>> q,knn;
@@ -164,7 +172,7 @@ tuple<vector<int>, vector<float>> search_KNN_by_Guided_tree(float *query, int K,
 	knn.push(make_tuple(furthest_dist, start));
 
 	int step=0;
-	while (!q.empty() && (beta<0 || step<beta))
+	while (!q.empty() && (beta<0 || step<beta) && (calc_left>0))
 	{
 		float d;
 		int v;
@@ -185,10 +193,14 @@ tuple<vector<int>, vector<float>> search_KNN_by_Guided_tree(float *query, int K,
 		vector<int> neighbors = find_neighbors(query, v, trees[v], points, 0, points.cols, max_dim);
 		for (int u : neighbors)
 		{
+			if(calc_left<=0){
+				break;
+			}
 			if (in_set(u, visited))
 				continue;
 			visited.insert(u);
 			d = dist_L2(points[u], query, points.cols);
+			calc_left--;
 			q.push(make_tuple(-d, u));
 			knn.push(make_tuple(d, u));
 			if (knn.size() > K)
@@ -217,36 +229,36 @@ tuple<vector<int>, vector<float>> search_KNN_by_Guided_tree(float *query, int K,
 tuple<vector<int>, vector<float>> search_KNN_two_phase(float *query, int K, AdjList &graph, Matrix<float> &points, vector<Guided_tree *> &trees, int start, int max_calc, int beta)
 {
 	int N = points.rows;
-	int calc_left = max_calc - 1;
+	int calc_left = max_calc;
 	unordered_set<int> visited;
 	visited.insert(start);
 	priority_queue<tuple<float, int>> q, knn;
 	float furthest_dist = dist_L2(points[start], query, points.cols);
 	q.push(make_tuple(-furthest_dist, start));
 	knn.push(make_tuple(furthest_dist, start));
-	search_KNN_by_Guided_tree(query,K,graph,points,trees,start,max_calc,&q,beta);
-	return search_KNN(query,K,graph,points,-1,max_calc,&q);
+	search_KNN_by_Guided_tree(query,K,graph,points,trees,start,calc_left,&q,beta);
+	return search_KNN(query,K,graph,points,-1,calc_left,&q);
 }
 
 tuple<vector<int>, vector<float>> search_KNN_two_phase_nn(float *query, int K, AdjList &graph, Matrix<float> &points, vector<Guided_tree *> &trees, int start, int max_calc, int beta)
 {
 	int N = points.rows;
-	int calc_left = max_calc - 1;
+	int calc_left = max_calc;
 	unordered_set<int> visited;
 	visited.insert(start);
 	priority_queue<tuple<float, int>> q, knn;
 	float furthest_dist = dist_L2(points[start], query, points.cols);
 	q.push(make_tuple(-furthest_dist, start));
 	knn.push(make_tuple(furthest_dist, start));
-	search_KNN_by_Guided_tree(query,K,graph,points,trees,start,max_calc,&q,beta);
-	return search_KNN_nn(query,K,graph,points,-1,max_calc,&q);
+	search_KNN_by_Guided_tree(query,K,graph,points,trees,start,calc_left,&q,beta);
+	return search_KNN_nn(query,K,graph,points,-1,calc_left,&q);
 }
 
 tuple<vector<int>, vector<float>> search_KNN_vote(float *query, int K, AdjList &graph, Matrix<float> &points, vector<vector<Guided_tree *>> &forest, int start, int max_calc, int beta)
 {
 	int new_start = start;
 	int N = points.rows;
-	int calc_left = max_calc - 1;
+	int calc_left = max_calc;
 	unordered_set<int> visited;
 	visited.insert(start);
 	priority_queue<tuple<float, int>> q, knn;
@@ -279,7 +291,7 @@ tuple<vector<int>, vector<float>> search_KNN_vote(float *query, int K, AdjList &
 	}
 	start = new_start;
 
-	return search_KNN(query,K,graph,points,start,max_calc,nullptr);
+	return search_KNN(query,K,graph,points,start,calc_left,nullptr);
 
 }
 

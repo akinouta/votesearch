@@ -11,7 +11,7 @@ cmake --build build
 mkdir -p bin/graph
 
 # 设置数据集和数据路径变量
-dataset=siftsmall
+dataset=gist
 data_path=dataset/${dataset}
 graph_path=./bin/graph/${dataset}_hcnng.ivecs
 
@@ -21,5 +21,5 @@ if [ ! -f ${graph_path} ]; then
 fi
 
 # 执行两阶段搜索测试
-./bin/test_l_2phase_search ${data_path}/${dataset}_base.fvecs ${data_path}/${dataset}_query.fvecs ${data_path}/${dataset}_groundtruth.ivecs ${graph_path} 100 -1 30
+./bin/test_l_2phase_search ${data_path}/${dataset}_base.fvecs ${data_path}/${dataset}_query.fvecs ${data_path}/${dataset}_groundtruth.ivecs ${graph_path} 10 -1
 # ./bin/test_degree ${data_path}/${dataset}_base.fvecs ${data_path}/${dataset}_query.fvecs ${data_path}/${dataset}_groundtruth.ivecs ${graph_path} 100 -1 30

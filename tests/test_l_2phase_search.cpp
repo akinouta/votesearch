@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     auto forest = get_all_Guided_forest(points, graph);
     int start = rand_int(0, N);
     int beta=10;
-    // for(int beta=1;beta<=1001;beta+=100){
+    for(max_calc=1000;max_calc<=10000;max_calc+=1000){
         cout << "greedy(" << beta << "):";
         test_without_guide(queries, K, points, gt, graph, max_calc, start);
         cout << "guided(" << beta << "):";
@@ -42,6 +42,6 @@ int main(int argc, char **argv)
         test_two_phase_nn(queries, K, points, gt, graph, trees, max_calc, start, beta);
         cout << "vote(" << beta << "):";
         test_vote(queries, K, points, gt, graph, forest, max_calc, start, beta);
-    // }
+    }
     return 0;
 }
