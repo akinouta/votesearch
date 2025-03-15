@@ -1,6 +1,5 @@
 #include "search.h"
 using namespace std;
-
 int main(int argc, char **argv)
 {
 
@@ -19,7 +18,6 @@ int main(int argc, char **argv)
     string file_graph(argv[4]);
     int K = atoi(argv[5]);
     int max_calc = atoi(argv[6]);
-    int L = atoi(argv[7]);
 
     Matrix<float> points = read_fvecs(file_dataset, N, Dim);
     printf("base read (%d,%d) ...\n", N, Dim);
@@ -29,14 +27,37 @@ int main(int argc, char **argv)
     printf("groundtruth read...\n");
 
     AdjList graph = read_adjlist(file_graph, points, true);
-
-
-    // auto trees = get_all_Guided_tree(points, graph);
-
-
-
+    auto trees = get_all_Guided_tree(points, graph);
     auto forest = get_all_Guided_forest(points, graph);
+    int start = rand_int(0, N);
+    int beta = 1;
+    max_calc = -1;
+    for (beta = 10; beta <= 100; beta += 10)
+    {
+        cout << "greedy(" << beta << "):";
+        test_without_guide(queries, K, points, gt, graph, max_calc, start);
+        // cout << "guided(" << beta << "):";
+        // test_Guided_tree(queries, K, points, gt, graph, trees, max_calc, start, beta);
+        // cout << "2phase1(" << beta << "):";
+        // test_two_phase(queries, K, points, gt, graph, trees, max_calc, start, beta);
+        // cout << "2phase2(" << beta << "):";
+        // test_two_phase_nn(queries, K, points, gt, graph, trees, max_calc, start, beta);
+        cout << "vote(" << beta << "):";
+        test_vote(queries, 50, points, gt, graph, forest, max_calc, start, beta);
+    }
 
-
-
+    for (beta = 10; beta <= 100; beta += 10)
+    {
+        cout << "greedy(" << beta << "):";
+        test_without_guide(queries, K, points, gt, graph, max_calc, start);
+        // cout << "guided(" << beta << "):";
+        // test_Guided_tree(queries, K, points, gt, graph, trees, max_calc, start, beta);
+        // cout << "2phase1(" << beta << "):";
+        // test_two_phase(queries, K, points, gt, graph, trees, max_calc, start, beta);
+        // cout << "2phase2(" << beta << "):";
+        // test_two_phase_nn(queries, K, points, gt, graph, trees, max_calc, start, beta);
+        cout << "vote(" << beta << "):";
+        test_vote(queries, 100, points, gt, graph, forest, max_calc, start, beta);
+    }
+    return 0;
 }
